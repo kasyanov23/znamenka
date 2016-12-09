@@ -1,7 +1,9 @@
 package ru.click.cabinet.service;
 
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.WrongCodeSignUpException;
 import ru.click.core.model.Client;
@@ -13,15 +15,24 @@ import ru.click.core.repository.domain.LkUserRepository;
 import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Service
 public class SignUpService {
 
-    private SmsService smsService;
+    private final SmsService smsService;
 
-    private LkUserRepository userRepository;
+    private final LkUserRepository userRepository;
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public SignUpService(SmsService smsService, LkUserRepository userRepository, ClientRepository clientRepository, PasswordEncoder passwordEncoder) {
+        this.smsService = smsService;
+        this.userRepository = userRepository;
+        this.clientRepository = clientRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void sendSms(String phone) {
         Integer code = ThreadLocalRandom.current().nextInt();

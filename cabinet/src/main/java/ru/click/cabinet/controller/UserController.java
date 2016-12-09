@@ -13,8 +13,6 @@ public class UserController {
 
     private final SignUpService service;
 
-
-
     public UserController(SignUpService service) {
         notNull(service);
         this.service = service;
