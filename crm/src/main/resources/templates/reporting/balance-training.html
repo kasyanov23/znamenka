@@ -29,97 +29,39 @@
 <div th:include="header"></div>
 <div class="container">
     <div class="row">
-        <div class="col-md-4 top-buffer">
+        <div th:replace="reporting/reports :: menu"></div>
+        <div class="col-md-8 report" th:fragment="balanse-training">
             <form class="well form-horizontal" action="" method="post">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col col-xs-6">
-                                <h3 class="panel-title">Отчеты</h3>
-
+                                <h3 class="panel-title">Отчет по балансу тренировок</h3>
                             </div>
-
                         </div>
                     </div>
                     <div class="panel-body">
-                        <ul>
-                            <li>Отчет по оплатам клиентов</li>
-                            <li>Отчет по дежурствам тренеров</li>
-                        </ul>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-8 report">
-
-
-            <form class="well form-horizontal" action="" method="post">
-                <div class="panel panel-default panel-table">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col col-xs-6">
-                                <h3 class="panel-title">Отчет по оплатам клиентов</h3>
-
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <h1></h1>
-
-
-                        <!-- <div id="toolbar">
-                                <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                </select>
-                        </div> -->
-
                         <table id="table"
                                data-toggle="table"
                                data-search="true"
                                data-filter-control="true"
                                data-show-export="true"
                                data-click-to-select="true"
-                               data-toolbar="#toolbar">
+                               data-toolbar="#toolbar"
+                               data-url="/reporting/balance-training/data"
+                        >
                             <thead>
                             <tr>
-                                <th data-field="state" data-checkbox="true"></th>
-                                <th data-field="prenom" data-filter-control="input" data-sortable="true">Клиент</th>
-                                <th data-field="date" data-filter-control="select" data-sortable="true">Дата</th>
-                                <th data-field="examen" data-filter-control="select" data-sortable="true">Платеж</th>
-                                <th data-field="note" data-sortable="true">Note</th>
+                                <th data-field="clientName" data-filter-control="input" >Клиент</th>
+                                <th data-field="productName" data-filter-control="input" data-sortable="true">Абонемент</th>
+                                <th data-field="trainingCount" data-filter-control="select" data-sortable="true">Тренировок осталось</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td class="bs-checkbox "><input data-index="0" name="btSelectItem" type="checkbox"></td>
-                                <td>нку</td>
-                                <td>01/09/2015</td>
-                                <td>пы</td>
-                                <td>12/20</td>
-                            </tr>
-
-                            <tr>
-                                <td class="bs-checkbox "><input data-index="0" name="btSelectItem" type="checkbox"></td>
-                                <td>фыв</td>
-                                <td>01/09/2015</td>
-                                <td>фыв12</td>
-                                <td>12/20</td>
-                            </tr>
-
-                            </tbody>
                         </table>
                     </div>
                 </div>
             </form>
-
-
-
-
         </div>
-
         <!-- /.container -->
     </div>
 </div>
