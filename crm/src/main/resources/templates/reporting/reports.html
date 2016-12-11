@@ -16,12 +16,6 @@
 </head>
 <body>
 <th:block th:include="~{fragment/imports :: import_script(~{::script})}">
-    <script th:src="@{/js/calendar/fullcalendar.min.js}"></script>
-    <script th:src="@{/js/jquery-ui.min.js}"></script>
-    <script th:src="@{/js/calendar/ru.js}"></script>
-    <script th:src="@{/js/calendar/gcal.js}"></script>
-    <script th:src="@{/js/index.js}"></script>
-    <script th:src="@{/js/reporting/reports.js}"></script>
 
     <!--Женя не бей  2-->
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js'></script>
@@ -29,6 +23,8 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js'></script>
     <!--Женя не бей 2-->
+    <script th:src="@{/js/reporting/reports.js}"></script>
+
 </th:block>
 <div th:include="header"></div>
 <div class="container">
@@ -45,15 +41,23 @@
                     </div>
                     <div class="panel-body">
                         <ul>
-                            <li><a th:href="@{/reporting/balance-training}">Отчет по балансу тренировок</a></li>
-                            <li>Отчет по дежурствам тренеров</li>
+                            <li id="balance-training-item">Отчет по балансу тренировок</li>
+                            <li id="sold-subscriptions-item">Отчет по продажам</li>
                         </ul>
                     </div>
                 </div>
             </form>
         </div>
+        <div class="panel-body col-md-8">
+            <div>
+                <table id="table"></table>
+            </div>
+        </div>
     </div>
-    <!-- /.container -->
+</div>
+<div class="row">
+    <div class="col-md-4 top-buffer" id="filter">
+    </div>
 </div>
 <!-- /.container -->
 </body>

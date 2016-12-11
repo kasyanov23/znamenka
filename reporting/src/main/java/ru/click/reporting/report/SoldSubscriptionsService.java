@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Service;
-import ru.click.reporting.model.ClientPayments;
 import ru.click.reporting.model.SoldSubscriptions;
 import ru.click.reporting.query.QueryHolder;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +33,7 @@ public class SoldSubscriptionsService {
             .build();
 
     @Autowired
-    public SoldSubscriptionsService(NamedParameterJdbcOperations operations, QueryHolder<ClientPayments> soldSubscriptionsQueryHolder) {
+    public SoldSubscriptionsService(NamedParameterJdbcOperations operations, QueryHolder<SoldSubscriptions> soldSubscriptionsQueryHolder) {
         notNull(operations, "Jdbc Operations must not be null");
         notNull(soldSubscriptionsQueryHolder, "Query holder must not be null");
         this.operations = operations;
@@ -43,8 +43,8 @@ public class SoldSubscriptionsService {
     public List<SoldSubscriptions> soldSubscriptions(LocalDate from, LocalDate to, Long productId) {
         val sql = soldSubscriptionsQueryHolder.getQuery();
         Map<String, Object> queryParams = new HashMap<>(3);
-        queryParams.put("from", from);
-        queryParams.put("to", to);
+        queryParams.put("from", Date.valueOf(from));
+        queryParams.put("to", Date.valueOf(to));
         queryParams.put("product_id", productId);
         return operations.query(sql, queryParams, rowMapper);
     }

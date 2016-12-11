@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="sold-subscription-filter">
+    <div th:replace="~{element/element :: date-input('from', 'От', false, false)}"></div>
+    <div th:replace="~{element/element :: date-input('to', 'До', false, false)}"></div>
+    <select id="product_id" class="form-control selectpicker">
+        <option value="">Выберите продукт</option>
+        <option th:each="product: ${products}" th:value="${product.id}"
+                th:text="${product.name}"></option>
+    </select>
+    <button id="run-report">Запустить отчет</button>
+    <script>
+        $('#run-report').bind("click", function () {
+            $('#table').bootstrapTable({
+                url: '/reporting/sold-subscriptions/data',
+                queryParams: function (p) {
+                    return {
+                        from: $('#from').val(),
+                        to: $('#to').val(),
+                        product_id: $('#product_id').val()
+                    };
+                },
+                method: 'get',
+                filterControl: true,
+                search: true,
+                showExport: true,
+                toolbar: '#toolbar',
+                columns: [
+                    {
+                        field: 'clientName',
+                        title: 'Клиент',
+                        filterControl: 'input'
+                    },
+                    {
+                        field: 'productName',
+                        title: 'Абонемент',
+                        filterControl: 'input'
+                    },
+                    {
+                        field: 'purchaseDate',
+                        title: 'Дата продажи',
+                        sortable: true
+                    },
+                    {
+                        field: 'price',
+                        title: 'Цена'
+                    },
+                    {
+                        field: 'payd',
+                        title: 'Заплачено клиентом'
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
