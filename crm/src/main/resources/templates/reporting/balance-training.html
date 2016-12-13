@@ -16,7 +16,6 @@
 </head>
 <body>
 <th:block th:include="~{fragment/imports :: import_script(~{::script})}">
-
     <!--Женя не бей  2-->
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js'></script>
@@ -24,47 +23,47 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js'></script>
     <!--Женя не бей 2-->
     <script th:src="@{/js/reporting/reports.js}"></script>
-
 </th:block>
 <div th:include="header"></div>
 <div class="container">
     <div class="row">
         <div class="col-md-4 top-buffer">
-            <div class="row" th:fragment="menu">
-                <form class="well form-horizontal" action="" method="post">
-                    <div class="panel panel-default panel-table">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col col-xs-6">
-                                    <h3 class="panel-title">Отчеты</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <ul>
-                                <li id="balance-training-item">
-                                    <a th:href="@{/reporting/balance-training/view}">
-                                        Отчет по балансу тренировок
-                                    </a>
-                                </li>
-                                <li id="sold-subscriptions-item">
-                                    <a th:href="@{/reporting/sold-subscriptions/view}">
-                                        Отчет по продажам
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <div th:replace="reporting/reports :: menu"></div>
         </div>
         <div class="panel-body col-md-8">
             <div>
                 <table id="table"></table>
+                <script>
+                    $('#table').bootstrapTable({
+                        url: '/reporting/balance-training/data',
+                        method: 'get',
+                        filterControl: true,
+                        search: true,
+                        showExport: true,
+                        toolbar: '#toolbar',
+                        columns: [
+                            {
+                                field: 'clientName',
+                                title: 'Клиент',
+                                filterControl: 'input'
+                            },
+                            {
+                                field: 'productName',
+                                title: 'Абонемент',
+                                filterControl: 'input'
+                            },
+                            {
+                                field: 'trainingCount',
+                                title: 'Тренировок осталось',
+                                filterControl: 'select',
+                                sortable: true
+                            }
+                        ]
+                    });
+                </script>
             </div>
         </div>
     </div>
 </div>
-<!-- /.container -->
 </body>
 </html>

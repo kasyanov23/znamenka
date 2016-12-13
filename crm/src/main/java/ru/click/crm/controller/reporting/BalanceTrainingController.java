@@ -26,4 +26,9 @@ public class BalanceTrainingController {
     public List<BalanceTraining> data() {
         return service.balanceTrainings();
     }
+
+    @GetMapping("/view")
+    public String view() {
+        return "reporting/balance-training";
+    }
 }

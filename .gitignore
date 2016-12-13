@@ -33,8 +33,6 @@ buildNumber.properties
 # Sensitive or high-churn files:
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
-.idea/uiDesigner.xml
-
 # Gradle:
 .idea/gradle.xml
 # Mongo Explorer plugin:
@@ -72,3 +70,4 @@ znamenka-cloud.iml
 persons/
 /core/core.iml
 /reporting/reporting.iml
+/platform.iml

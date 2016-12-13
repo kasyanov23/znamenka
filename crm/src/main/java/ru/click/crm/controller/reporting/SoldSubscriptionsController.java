@@ -39,9 +39,9 @@ public class SoldSubscriptionsController {
         return service.soldSubscriptions(from, to, productId);
     }
 
-    @GetMapping("/filter")
-    public ModelAndView filter() {
-        val mv = new ModelAndView("reporting/sold-subscriptions :: sold-subscription-filter");
+    @GetMapping("/view")
+    public ModelAndView view() {
+        val mv = new ModelAndView("reporting/sold-subscriptions");
         mv.addObject("products", apiStore.findAll(ProductApi.class));
         return mv;
     }
