@@ -9,5 +9,3 @@ FROM znamenka.trainings tr
 WHERE tr.status_id != 1
       AND tr.start BETWEEN :from AND :to
       AND tr.trainer_id = :trainer_id
-      AND tr.status_id = :status
-      AND tr.client_id = :client_id
