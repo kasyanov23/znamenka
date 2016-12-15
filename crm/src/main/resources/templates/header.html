@@ -6,45 +6,70 @@
 <body>
 <div class="container">
 
-    <form class="well form-horizontal" action=" " method="post" id="header">
 
-        <!-- Form Name -->
 
-        <nav class="navbar navbar-default" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
-                        class="icon-bar"></span><span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Znamenka CRM</a>
+    <div class="sidebar" data-background-color="brown" data-active-color="danger">
+
+        <div class="logo">
+            <a href="http://www.creative-tim.com" class="simple-text">
+                Znamenka
+            </a>
+        </div>
+        <div class="logo logo-mini">
+            <a href="http://www.creative-tim.com" class="simple-text">
+                Zn
+            </a>
+        </div>
+        <div class="sidebar-wrapper">
+            <div class="user">
+                <div class="photo">
+                    <img src="../../assets/img/faces/face-2.jpg" />
+                </div>
+                <div class="info">
+                    <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                        Пользователь
+                        <b class="caret"></b>
+                    </a>
+                    <div class="collapse" id="collapseExample">
+                        <ul class="nav">
+                            <li><a href="#profile">Мой профиль</a></li>
+                            <li><a href="#edit">Редактировать профиль</a></li>
+                            <li><a href="#settings">Настройки</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a th:href="@{/index}">Рабочий стол</a>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Работа с клиентами
-                            <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
+            <ul class="nav">
+                <li>
+                    <a data-toggle="collapse" href="#dashboardOverview">
+                        <i class="ti-panel"></i>
+                        <p>Пока что тут будет всё
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="dashboardOverview">
+                        <ul class="nav">
+                            <li>
+                                <a th:href="@{/index}">Рабочий стол</a>
+                            </li>
                             <li><a th:href="@{/client}">Заведение клиентов</a></li>
                             <li><a th:href="@{/training}">Запись на тренировку</a></li>
                             <li><a th:href="@{/sale}">Продажи</a></li>
                             <li><a th:href="@{/events}">Расписание</a></li>
                             <li><a th:href="@{/duty}">Дежурства</a></li>
+                            <li><a th:href="@{/empty_template}">Текущий шаблон</a></li>
+                            <li sec:authorize="hasRole('ROLE_TRAINER')">
+                                <a th:href="@{/end-of-day}">Отчет за смену</a>
+                            </li>
                         </ul>
-                    </li>
-                    <li sec:authorize="hasRole('ROLE_TRAINER')">
-                        <a th:href="@{/end-of-day}">Отчет за смену</a>
-                    </li>
+                    </div>
+                </li>
 
-                </ul>
-                <th:block th:include="~{fragment/user}">
-                </th:block>
-            </div>
-        </nav>
-    </form>
+            </ul>
+        </div>
+    </div>
+
+
 </div>
 </body>
 </html>

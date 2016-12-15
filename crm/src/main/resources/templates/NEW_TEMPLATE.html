@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/imports :: import_header(~{::title},~{::link})}">
+    <link rel="stylesheet" th:href="@{/css/client.css}"/>
+    <title>Клиенты</title>
+</head>
+<body>
+<th:block th:include="~{fragment/imports :: import_script(~{::script})}">
+    <script th:src="@{/js/client.js}"></script>
+</th:block>
+<div class="wrapper">
+    <div class="sidebar" data-background-color="brown" data-active-color="danger">
+        <div th:include="header"></div>
+    </div>
+    <div class="main-panel">
+
+        <div th:include="nav-bar"></div>
+        <!--content here-->
+хуй
+        <!--content here-->
+
+        <div th:include="footer"></div>
+
+    </div>
+    </div>
+</body>
+</html>

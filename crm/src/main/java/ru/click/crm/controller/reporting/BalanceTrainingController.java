@@ -31,4 +31,10 @@ public class BalanceTrainingController {
     public String view() {
         return "reporting/balance-training";
     }
+
+    // TODO: 15.12.2016  убрать это говно
+    @GetMapping("/paper")
+    public String paper() {
+        return "reporting/report";
+    }
 }
