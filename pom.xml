@@ -15,6 +15,7 @@
         <module>core</module>
         <module>crm</module>
         <module>cabinet</module>
+        <module>sms</module>
     </modules>
 
     <parent>
