@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/webjars/**").permitAll()
                 .antMatchers("/training/events/busy", "/events", "/calendar/**").permitAll()
+                .antMatchers("/reporting/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
                 .formLogin().loginPage("/login").defaultSuccessUrl("/index", true)

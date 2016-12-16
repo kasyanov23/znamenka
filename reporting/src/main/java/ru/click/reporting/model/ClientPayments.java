@@ -14,6 +14,8 @@ public class ClientPayments {
     private final Date paymentDate;
     
     private final Long sumPayments;
+
+    private final Long leftToAdd;
     
     private final String productName;
     

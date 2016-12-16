@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/imports :: import_header(~{::title},~{::link})}">
+    <title>Рабочий стол</title>
+    <link rel="stylesheet" th:href="@{/css/fullcalendar.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <!--Женя не бей -->
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel='stylesheet prefetch'
+          href='http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css'>
+    <link rel='stylesheet prefetch'
+          href='http://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css'>
+    <link rel='stylesheet prefetch'
+          href='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css'>
+    <!--Женя не бей -->
+</head>
+<body>
+<th:block th:include="~{fragment/imports :: import_script(~{::script})}">
+    <!--Женя не бей  2-->
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js'></script>
+    <!--Женя не бей 2-->
+    <script th:src="@{/js/reporting/reports.js}"></script>
+</th:block>
+<div th:include="header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 top-buffer">
+            <div th:replace="reporting/reports :: menu"></div>
+        </div>
+        <div class="panel-body col-md-8">
+            <div>
+                <table id="table"></table>
+                <script>
+                    $('#table').bootstrapTable({
+                        url: '/reporting/balance-training/data',
+                        method: 'get',
+                        filterControl: true,
+                        search: true,
+                        showExport: true,
+                        toolbar: '#toolbar',
+                        columns: [
+                            {
+                                field: 'clientName',
+                                title: 'Клиент',
+                                filterControl: 'input'
+                            },
+                            {
+                                field: 'productName',
+                                title: 'Абонемент',
+                                filterControl: 'input'
+                            },
+                            {
+                                field: 'trainingCount',
+                                title: 'Тренировок осталось',
+                                filterControl: 'select',
+                                sortable: true
+                            }
+                        ]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
