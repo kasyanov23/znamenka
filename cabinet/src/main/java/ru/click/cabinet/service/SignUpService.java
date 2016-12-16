@@ -1,7 +1,9 @@
 package ru.click.cabinet.service;
 
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.WrongCodeSignUpException;
 import ru.click.core.model.Client;
@@ -9,30 +11,43 @@ import ru.click.core.model.LkUser;
 import ru.click.core.model.QClient;
 import ru.click.core.repository.domain.ClientRepository;
 import ru.click.core.repository.domain.LkUserRepository;
+import ru.click.core.service.SmsWrapperService;
 
 import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Service
 public class SignUpService {
 
-    private SmsService smsService;
+    private final SmsWrapperService smsService;
 
-    private LkUserRepository userRepository;
+    private final LkUserRepository userRepository;
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public SignUpService(
+            SmsWrapperService smsService,
+            LkUserRepository userRepository,
+            ClientRepository clientRepository,
+            PasswordEncoder passwordEncoder
+    ) {
+        this.smsService = smsService;
+        this.userRepository = userRepository;
+        this.clientRepository = clientRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void sendSms(String phone) {
-        Integer code = ThreadLocalRandom.current().nextInt();
+        Integer code = ThreadLocalRandom.current().nextInt(1000, 9999);
         SmsCodeHolder.put(phone, code);
         smsService.send(phone, String.valueOf(code));
     }
 
-    // TODO: 03.12.2016 replace boolean to exception
     public void signUp(String phone, int code) {
         if (!checkCode(phone, code)) {
-            this.sendSms(phone);
             throw new WrongCodeSignUpException();
         }
 

@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Import;
         , WebConfig.class
         , BeanConfig.class
         , SecurityConfig.class
-        , WebSocketConfig.class
 })
 @EnableAutoConfiguration
 public class AppConfig {
