@@ -17,7 +17,6 @@ public class ContextLoadTest {
 
 	@Test
 	public void contextLoads() {
-	    service.send("9850625571", "Привет");
 	}
 
 }

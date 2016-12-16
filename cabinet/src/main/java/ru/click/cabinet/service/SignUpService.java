@@ -46,7 +46,7 @@ public class SignUpService {
         smsService.send(phone, String.valueOf(code));
     }
 
-    public void signUp(String phone, int code) {
+    public String signUp(String phone, int code) {
         if (!checkCode(phone, code)) {
             throw new WrongCodeSignUpException();
         }
@@ -55,13 +55,17 @@ public class SignUpService {
         if (client == null) {
             throw new NoExistsClientSignUpException();
         }
-        String randomPassword = new BigInteger(130, ThreadLocalRandom.current()).toString(32);
+        String randomPassword = new BigInteger(130, ThreadLocalRandom.current())
+                .toString(32)
+                .substring(0, 6);
         smsService.send(phone, "password: " + randomPassword);
         val user = new LkUser();
         user.setUsername(phone);
         user.setPassword(passwordEncoder.encode(randomPassword));
         user.setClient(client);
+        user.setName(client.getName());
         userRepository.save(user);
+        return randomPassword;
     }
 
 
