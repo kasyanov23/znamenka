@@ -12,6 +12,7 @@ import static ru.click.reporting.util.IOUtils.fileToString;
  *
  * @author Евгений Уткин (Eugene Utkin)
  */
+
 @Component
 public class ConductedTrainingsQueryHolder implements QueryHolder<ConductedTraining> {
 
