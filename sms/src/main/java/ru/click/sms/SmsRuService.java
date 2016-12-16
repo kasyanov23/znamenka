@@ -1,5 +1,6 @@
 package ru.click.sms;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.dezhik.sms.sender.SenderService;
@@ -19,6 +20,7 @@ import static java.util.Collections.singletonList;
  * @author Евгений Уткин (Eugene Utkin)
  */
 @Service
+@Slf4j
 public class SmsRuService implements SmsService {
 
     private final SenderService senderService;
@@ -35,5 +37,6 @@ public class SmsRuService implements SmsService {
         request.setReceivers(receivers);
         request.setText(text);
         SMSRuSendResponse response = senderService.execute(request);
+        log.info(response.getPlainResponse());
     }
 }
