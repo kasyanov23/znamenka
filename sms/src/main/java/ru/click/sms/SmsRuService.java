@@ -29,7 +29,7 @@ public class SmsRuService implements SmsService {
     @Override
     public String send(String phone, String text) {
         SMSRuSendRequest request = new SMSRuSendRequest();
-        List<String> receivers = singletonList("+7" + phone);
+        List<String> receivers = singletonList("+" + phone);
         request.setReceivers(receivers);
         request.setText(text);
         SMSRuSendResponse response = senderService.execute(request);

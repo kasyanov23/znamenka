@@ -8,6 +8,8 @@
 <form th:action="@{/sign-up/confirm}" method="post">
     <label for="code">Код</label>
     <input type="text" name="code" id="code"/>
+    <label th:if="${param.wrong_code}">Неправильный код</label>
+    <label th:if="${param.no_client}">Извините, у нас нет клиента с номером телефона [[${param.phone}]]</label>
     <button type="submit">Потвердить</button>
 </form>
 </body>

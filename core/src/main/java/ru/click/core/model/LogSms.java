@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * <p>
@@ -21,6 +21,7 @@ import javax.persistence.Table;
 public class LogSms {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String phone;
     private String text;

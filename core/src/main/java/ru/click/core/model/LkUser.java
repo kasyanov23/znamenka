@@ -30,6 +30,7 @@ public class LkUser implements UserDetails {
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_roles",
+            schema = "clients",
             joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     )

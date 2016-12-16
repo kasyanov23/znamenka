@@ -11,7 +11,7 @@
 
     <artifactId>sms</artifactId>
     <version>${project.version}</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

@@ -12,6 +12,6 @@ public abstract class SmsCodeHolder {
     }
 
     public static Integer getCode(String phone) {
-        return smsCodes.get(phone);
+        return smsCodes.remove(phone);
     }
 }
