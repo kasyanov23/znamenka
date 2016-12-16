@@ -11,10 +11,13 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
@@ -24,6 +27,7 @@ import ru.click.core.repository.EntityRepository;
 import ru.click.core.repository.QueryDslRepository;
 import ru.click.core.repository.QueryDslRepositoryImpl;
 import ru.click.core.repository.QueryFactory;
+import ru.click.sms.config.SmsAutoConfiguration;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -36,6 +40,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @ComponentScan("ru.click.core.*")
+@ImportAutoConfiguration(SmsAutoConfiguration.class)
+@EnableAsync
 public class JpaSubSystemAutoConfiguration {
 
 
@@ -59,6 +65,11 @@ public class JpaSubSystemAutoConfiguration {
             map.put(repository.getJavaType(), repository);
         }
         return map;
+    }
+
+    @Bean
+    public TaskExecutor taskExecutor() {
+        return new ThreadPoolTaskExecutor();
     }
 
     @EnableWebSocketMessageBroker

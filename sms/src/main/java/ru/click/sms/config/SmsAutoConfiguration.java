@@ -2,12 +2,13 @@ package ru.click.sms.config;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import ru.click.sms.SmsRuService;
+import ru.click.sms.SmsService;
 import ru.dezhik.sms.sender.AsyncSenderService;
 import ru.dezhik.sms.sender.SenderService;
 import ru.dezhik.sms.sender.SenderServiceConfiguration;
@@ -26,9 +27,9 @@ import static org.springframework.util.Assert.notNull;
  * @author Евгений Уткин (Eugene Utkin)
  */
 @Configuration
-@ComponentScan("ru.click.sms")
-@AutoConfigureAfter(WebMvcAutoConfiguration.class)
+@ComponentScan("ru.click.sms.*")
 @EnableConfigurationProperties(SmsPropertiesHolder.class)
+@ConditionalOnClass(SmsService.class)
 public class SmsAutoConfiguration {
 
     private final SmsPropertiesHolder smsPropertiesHolder;
@@ -52,6 +53,11 @@ public class SmsAutoConfiguration {
                 .setReturnPlainResponse(true)
                 .setExecutorService(executorService())
                 .build();
+    }
+
+    @Bean
+    public SmsService smsService() {
+        return new SmsRuService(senderService());
     }
 
     @Bean

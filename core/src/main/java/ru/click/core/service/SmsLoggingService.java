@@ -2,6 +2,7 @@ package ru.click.core.service;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.click.core.model.LogSms;
 import ru.click.core.repository.domain.LogSmsRepository;
@@ -28,6 +29,7 @@ public class SmsLoggingService implements SmsWrapperService {
     }
 
     @Override
+    @Async
     public void send(String phone, String text) {
         String status = smsService.send(phone, text);
         val sms = new LogSms()
