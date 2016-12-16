@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.click.core.converter.LocalDateTimeConverter;
 import ru.click.core.converter.BooleanConverter;
+import ru.click.core.listener.CreatedTrainingListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
         }
 )
 @Getter @Setter
+@EntityListeners(CreatedTrainingListener.class)
 public class Training implements BaseModel<Long> {
 
     @Id
