@@ -17,6 +17,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import ru.click.core.repository.EntityRepository;
 import ru.click.core.repository.QueryDslRepository;
 import ru.click.core.repository.QueryDslRepositoryImpl;
@@ -32,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConditionalOnClass({EntityRepository.class, QueryDslRepository.class, QueryFactory.class})
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ComponentScan("ru.click.core.repository")
+@ComponentScan("ru.click.core.*")
 public class JpaSubSystemAutoConfiguration {
 
 
@@ -56,6 +59,16 @@ public class JpaSubSystemAutoConfiguration {
             map.put(repository.getJavaType(), repository);
         }
         return map;
+    }
+
+    @EnableWebSocketMessageBroker
+    @Configuration
+    protected static class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+
+        @Override
+        public void registerStompEndpoints(StompEndpointRegistry registry) {
+            registry.addEndpoint("/calendar/**").setAllowedOrigins().withSockJS();
+        }
     }
 
     @Configuration

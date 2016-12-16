@@ -14,6 +14,7 @@ public interface SmsService {
      *
      * @param phone телефон получателя в формате 10 цифр (без +7 или 8) - 9850625571
      * @param text  текст сообщения
+     * @return статус отправки
      */
-    void send(String phone, String text);
+    String send(String phone, String text);
 }

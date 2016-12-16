@@ -31,12 +31,13 @@ public class SmsRuService implements SmsService {
     }
 
     @Override
-    public void send(String phone, String text) {
+    public String send(String phone, String text) {
         SMSRuSendRequest request = new SMSRuSendRequest();
         List<String> receivers = singletonList("+7" + phone);
         request.setReceivers(receivers);
         request.setText(text);
         SMSRuSendResponse response = senderService.execute(request);
         log.info(response.getPlainResponse());
+        return response.getResponseStatus().toString();
     }
 }
