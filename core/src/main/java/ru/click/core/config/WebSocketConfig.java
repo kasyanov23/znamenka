@@ -1,4 +1,4 @@
-package ru.click.crm.config;
+package ru.click.core.config;
 
 
 import org.springframework.context.annotation.Configuration;

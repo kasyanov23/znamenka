@@ -1,4 +1,4 @@
-package ru.click.crm.util;
+package ru.click.core.util;
 
 
 import org.springframework.context.ApplicationContext;

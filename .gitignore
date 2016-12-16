@@ -71,3 +71,5 @@ znamenka-cloud.iml
 /znamenka.iml
 persons/
 /core/core.iml
+/sms/sms.iml
+/platform.iml
