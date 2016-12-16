@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * <p>
  * Основной класс конфигурации приложения
  *
  * @author Евгений Уткин (Eugene Utkin)
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.Import;
         , WebConfig.class
         , BeanConfig.class
         , SecurityConfig.class
-        , WebSocketConfig.class
 })
 @EnableAutoConfiguration
 public class AppConfig {

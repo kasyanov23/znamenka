@@ -12,6 +12,7 @@ import java.util.List;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
+@Table(schema = "clients", name = "users")
 @Getter @Setter
 public class LkUser implements UserDetails {
 

@@ -4,9 +4,9 @@ CREATE TABLE clients.users
 (
   username   VARCHAR(50) PRIMARY KEY NOT NULL,
   password   VARCHAR(150)            NOT NULL,
-  trainer_id BIGINT,
+  client_id BIGINT,
   name       VARCHAR(30),
-  CONSTRAINT users_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES common.trainers (trainer_id)
+  CONSTRAINT users_client_id_fkey FOREIGN KEY (client_id) REFERENCES common.clients (client_id)
 );
 
 CREATE TABLE clients.user_roles
