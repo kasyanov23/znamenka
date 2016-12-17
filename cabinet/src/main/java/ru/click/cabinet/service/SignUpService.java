@@ -41,6 +41,10 @@ public class SignUpService {
     }
 
     public void sendSms(String phone) {
+        boolean exists = clientRepository.exists(QClient.client.phone.eq(phone));
+        if (!exists) {
+            throw new NoExistsClientSignUpException();
+        }
         Integer code = ThreadLocalRandom.current().nextInt(1000, 9999);
         SmsCodeHolder.put(phone, code);
         smsService.send(phone, String.valueOf(code));
@@ -52,9 +56,6 @@ public class SignUpService {
         }
 
         Client client = clientRepository.findOne(QClient.client.phone.eq(phone));
-        if (client == null) {
-            throw new NoExistsClientSignUpException();
-        }
         String randomPassword = new BigInteger(130, ThreadLocalRandom.current())
                 .toString(32)
                 .substring(0, 6);
