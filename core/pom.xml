@@ -13,6 +13,14 @@
 
     <artifactId>core</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>ru.click</groupId>
+            <artifactId>sms</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
       <build>
         <plugins>
             <plugin>
