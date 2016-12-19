@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.SignUpException;
@@ -17,6 +18,7 @@ import ru.click.core.model.Client;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -26,17 +28,19 @@ import static org.springframework.util.Assert.notNull;
 
 @Controller
 @RequestMapping("/sign-up")
-public class UserController {
+@Validated
+public class SignUpController {
 
     private final SignUpService service;
 
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(SignUpService service, AuthenticationManager authenticationManager) {
+    public SignUpController(SignUpService service, AuthenticationManager authManager) {
         notNull(service);
+        notNull(authManager);
         this.service = service;
-        this.authenticationManager = authenticationManager;
+        this.authenticationManager = authManager;
     }
 
     @GetMapping
@@ -45,7 +49,9 @@ public class UserController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendCode(@RequestParam String phone, HttpSession session) {
+    public ResponseEntity<String> sendCode(
+            @RequestParam @Pattern(regexp = "^[0-9]{10}") String phone, HttpSession session
+    ) {
         Client client = service.sendSms(phone);
         session.setAttribute("phone", phone);
         return ok(client.getName());
