@@ -9,6 +9,8 @@ import ru.click.core.repository.domain.LogSmsRepository;
 import ru.click.sms.SmsService;
 
 /**
+ * Сервис-wrapper для реализации асинхронной отправки смс,
+ * преобразующий телефонные номера, хранящиеся в базе к международному формату.
  * <p>
  * Создан 16.12.2016
  * <p>
@@ -33,7 +35,7 @@ public class SmsLoggingService implements SmsWrapperService {
     public void send(String phone, String text) {
         String status = smsService.send(phone, text);
         val sms = new LogSms()
-                .setPhone(phone)
+                .setPhone("+" + phone)
                 .setText(text)
                 .setStatus(status);
         repository.save(sms);
