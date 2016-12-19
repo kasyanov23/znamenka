@@ -1,6 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
-$(document).ajaxSend(function(e, xhr, options) {
+$(document).ajaxSend(function (e, xhr, options) {
     xhr.setRequestHeader(header, token);
 });
 $(document).ready(function () {
@@ -123,16 +123,16 @@ $(document).ready(function () {
 });
 
 function onFinishWizard() {
-    var $password = $('#password').val(), status = false;
+    var $password = $('#password').val(), $copyPassword = $('#copy-password').val();
     $.ajax({
         type: "post",
-        url: "/sign-up/confirm?p=" + btoa($password),
-        statusCode : {
-            200 : function () {
+        url: "/sign-up/confirm?p=" + btoa($password) + "&c=" + btoa($copyPassword),
+        statusCode: {
+            200: function () {
                 window.location.href = '/user';
                 //swal("Отлично!", "Теперь у вас есть учётная запись в личном кабинете", "success");
             },
-            400 : function () {
+            400: function () {
 
             }
         }
