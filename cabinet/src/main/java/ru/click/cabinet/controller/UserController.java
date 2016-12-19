@@ -1,19 +1,27 @@
 package ru.click.cabinet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.bind.annotation.*;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
-import ru.click.cabinet.exception.WrongCodeSignUpException;
+import ru.click.cabinet.exception.SignUpException;
 import ru.click.cabinet.service.SignUpService;
+import ru.click.core.model.Client;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.util.Assert.notNull;
 
 @Controller
@@ -22,45 +30,59 @@ public class UserController {
 
     private final SignUpService service;
 
+    private final AuthenticationManager authenticationManager;
+
     @Autowired
-    public UserController(SignUpService service) {
+    public UserController(SignUpService service, AuthenticationManager authenticationManager) {
         notNull(service);
         this.service = service;
+        this.authenticationManager = authenticationManager;
     }
+
     @GetMapping
-    public String signUpStep1() {
-        return "step1";
+    public String registration() {
+        return "registration";
     }
 
-    @PostMapping
-    public String sendCode(String phone, HttpSession session) {
-        service.sendSms(phone);
+    @PostMapping("/send")
+    public ResponseEntity<String> sendCode(@RequestParam String phone, HttpSession session) {
+        Client client = service.sendSms(phone);
         session.setAttribute("phone", phone);
-        return "redirect:/sign-up/confirm";
+        return ok(client.getName());
     }
 
-    @GetMapping("/confirm")
-    public String signUpStep2(HttpSession session) {
-        return "step2";
+
+    @PostMapping("/verify")
+    public ResponseEntity verify(@RequestParam Integer code, HttpSession session) {
+        String phone = (String) session.getAttribute("phone");
+        service.verify(phone, code);
+        return ok().build();
     }
 
     @PostMapping("/confirm")
-    public String confirm(Integer code, HttpSession session) {
+    public ResponseEntity confirm(@RequestParam("p") String encodedPassword, HttpSession session, HttpServletRequest request) {
         String phone = (String) session.getAttribute("phone");
-        String password = service.signUp(phone, code);
-        session.setAttribute("password", password);
-        return "redirect:/sign-up/confirm";
+        byte[] decodedBytes = Base64Utils.decodeFromString(encodedPassword);
+        String password = new String(decodedBytes, UTF_8);
+        service.confirm(phone, password);
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(phone, password);
+        token.setDetails(new WebAuthenticationDetails(request));
+        Authentication authenticatedUser = authenticationManager.authenticate(token);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+        return ok().build();
     }
 
-    @ExceptionHandler(WrongCodeSignUpException.class)
-    public View wrongCodeHandler() {
-        return new RedirectView("/sign-up/confirm?wrong_code");
+
+    @ExceptionHandler(SignUpException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public void errorHandler() {
     }
 
     @ExceptionHandler(NoExistsClientSignUpException.class)
-    public View noExistsClientHandler(HttpSession session) {
-        String phone = (String) session.getAttribute("phone");
-        return new RedirectView("/sign-up/confirm?phone="+phone+"&no_client");
+    @ResponseStatus(NO_CONTENT)
+    public void noExistsClientHandler() {
     }
 
 }

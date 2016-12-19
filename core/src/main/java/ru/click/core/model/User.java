@@ -44,6 +44,13 @@ public class User implements UserDetails {
     @Column(name = "name")
     private String name;
 
+    @PostLoad
+    private void setNameUser() {
+        if (getName() == null) {
+            this.setName(getTrainer().getName());
+        }
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
