@@ -10,8 +10,14 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -23,6 +29,8 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
 import ru.click.cabinet.config.oauth2.util.OAuth2Provider;
+import ru.click.core.repository.UserDao;
+import ru.click.core.repository.domain.LkUserRepository;
 
 import javax.servlet.Filter;
 import java.util.List;
@@ -34,14 +42,42 @@ import java.util.stream.Collectors;
 @Order(6)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final OAuth2ClientContext oauth2ClientContext;
+    private final ListableBeanFactory factory;
+    private final LkUserRepository userRepository;
+
     @Autowired
-    OAuth2ClientContext oauth2ClientContext;
-    @Autowired
-    private ListableBeanFactory factory;
+    public SecurityConfig(
+            OAuth2ClientContext oauth2ClientContext,
+            ListableBeanFactory factory,
+            LkUserRepository userRepository
+    ) {
+        this.oauth2ClientContext = oauth2ClientContext;
+        this.factory = factory;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(provider());
+    }
+
+    @Bean
+    public AuthenticationProvider provider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDao());
+        return provider;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new StandardPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDao() {
+        return new UserDao<>(userRepository);
     }
 
     @Override
@@ -49,10 +85,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/fonts/**", "/webjars/**", "/", "/login/**").permitAll()
-                .antMatchers("/sign-up/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**").permitAll()
+                .antMatchers("/sign-up/**", "/login").permitAll()
                 .anyRequest().authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+                .and()
+                .formLogin().loginPage("/login").defaultSuccessUrl("/user", true)
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
         ;

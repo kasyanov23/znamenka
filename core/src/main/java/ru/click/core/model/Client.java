@@ -54,8 +54,16 @@ public class Client implements BaseModel<Long> {
     @OneToMany(mappedBy = "client", fetch = LAZY)
     private List<ClientAbonement> abonements;
 
+    @Transient
+    private String fullName;
+
+    @PostLoad
+    private void setFullName() {
+        this.fullName = this.getName() + " " + this.getSurname();
+    }
+
     public String getFullName() {
-        return this.getName() + " " + this.getSurname();
+        return fullName;
     }
 
 }
