@@ -2,9 +2,11 @@ package ru.click.cabinet.service;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.click.cabinet.exception.DataAccessSignUpException;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.UnknownSignUpException;
@@ -16,10 +18,14 @@ import ru.click.core.repository.domain.ClientRepository;
 import ru.click.core.repository.domain.LkUserRepository;
 import ru.click.core.service.SmsWrapperService;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Slf4j
+@Validated
 public class SignUpService {
 
     private final SmsWrapperService smsService;
@@ -43,7 +49,7 @@ public class SignUpService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Client sendSms(String phone) {
+    public Client sendSms(@Pattern(regexp = "^9[0-9]{9}$") String phone) {
         Client client = clientRepository.findOne(QClient.client.phone.eq("7".concat(phone)));
         if (client == null) {
             throw new NoExistsClientSignUpException();
@@ -55,13 +61,17 @@ public class SignUpService {
         return client;
     }
 
-    public void verify(String phone, int code) {
+    public void verify(String phone, @Min(1000) @Max(9999) Integer code) {
         if (!checkCode(phone, code)) {
             throw new WrongCodeSignUpException();
         }
     }
 
-    public void confirm(String phone, String password) {
+    public void confirm(
+            String phone,
+            @Length(min = 6, max = 16)
+            @Pattern(regexp = "^[A-z]+[0-9A-z]+$") String password
+    ) {
         Client client = SignUpHolder.getClient(phone).orElseThrow(UnknownSignUpException::new);
         val user = new LkUser();
         user.setUsername(phone);

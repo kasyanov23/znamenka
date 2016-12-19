@@ -1,5 +1,6 @@
 package ru.click.cabinet.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import ru.click.core.model.Client;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -26,6 +28,7 @@ import static org.springframework.util.Assert.notNull;
 
 @Controller
 @RequestMapping("/sign-up")
+@Slf4j
 public class UserController {
 
     private final SignUpService service;
@@ -77,12 +80,21 @@ public class UserController {
 
     @ExceptionHandler(SignUpException.class)
     @ResponseStatus(BAD_REQUEST)
-    public void errorHandler() {
+    public void errorHandle(SignUpException e) {
+        log.error(e.getMessage(), e);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public void validationErrorHandle(ConstraintViolationException e) {
+        log.error(e.getMessage(), e);
     }
 
     @ExceptionHandler(NoExistsClientSignUpException.class)
     @ResponseStatus(NO_CONTENT)
-    public void noExistsClientHandler() {
+    public void noExistsClientHandle(NoExistsClientSignUpException e) {
+        log.error(e.getMessage(), e);
     }
+
 
 }
