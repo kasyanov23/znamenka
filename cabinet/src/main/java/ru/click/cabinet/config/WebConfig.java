@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.SpringDataWebConfiguration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -104,7 +106,15 @@ public class WebConfig extends SpringDataWebConfiguration {
         return new MethodValidationPostProcessor();
     }
 
+    @Bean(name = "validator")
+    public LocalValidatorFactoryBean validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
+    @Override
+    public Validator getValidator() {
+        return validator();
+    }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {

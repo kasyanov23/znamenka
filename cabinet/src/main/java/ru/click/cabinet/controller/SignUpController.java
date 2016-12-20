@@ -1,5 +1,6 @@
 package ru.click.cabinet.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.SignUpException;
@@ -18,7 +18,7 @@ import ru.click.core.model.Client;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Pattern;
+import javax.validation.ConstraintViolationException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -28,19 +28,18 @@ import static org.springframework.util.Assert.notNull;
 
 @Controller
 @RequestMapping("/sign-up")
-@Validated
-public class SignUpController {
+@Slf4j
+public class UserController {
 
     private final SignUpService service;
 
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public SignUpController(SignUpService service, AuthenticationManager authManager) {
+    public UserController(SignUpService service, AuthenticationManager authenticationManager) {
         notNull(service);
-        notNull(authManager);
         this.service = service;
-        this.authenticationManager = authManager;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping
@@ -49,9 +48,7 @@ public class SignUpController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendCode(
-            @RequestParam @Pattern(regexp = "^[0-9]{10}") String phone, HttpSession session
-    ) {
+    public ResponseEntity<String> sendCode(@RequestParam String phone, HttpSession session) {
         Client client = service.sendSms(phone);
         session.setAttribute("phone", phone);
         return ok(client.getName());
@@ -83,12 +80,21 @@ public class SignUpController {
 
     @ExceptionHandler(SignUpException.class)
     @ResponseStatus(BAD_REQUEST)
-    public void errorHandler() {
+    public void errorHandle(SignUpException e) {
+        log.error(e.getMessage(), e);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public void validationErrorHandle(ConstraintViolationException e) {
+        log.error(e.getMessage(), e);
     }
 
     @ExceptionHandler(NoExistsClientSignUpException.class)
     @ResponseStatus(NO_CONTENT)
-    public void noExistsClientHandler() {
+    public void noExistsClientHandle(NoExistsClientSignUpException e) {
+        log.error(e.getMessage(), e);
     }
+
 
 }
