@@ -44,6 +44,12 @@ public class SmsLoggingService implements SmsWrapperService {
         repository.save(sms);
     }
 
+    /**
+     * Преобразует номер телфона в международный формат
+     *
+     * @param phoneFromClient исходный номер телефона
+     * @return номер телефона в международном формате
+     */
     private String convertPhone(String phoneFromClient) throws RuntimeException {
         hasText(phoneFromClient, "Номер телефона отсутствует");
         StringBuilder number = new StringBuilder("");
