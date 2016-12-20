@@ -15,15 +15,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
-
-import static org.springframework.util.Assert.notNull;
+import ru.click.core.repository.UserDao;
+import ru.click.core.repository.domain.UserRepository;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDao;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -59,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationProvider provider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDao);
+        provider.setUserDetailsService(userDao());
         return provider;
     }
 
@@ -68,10 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new StandardPasswordEncoder();
     }
 
-    @Autowired
-    public SecurityConfig setUserDao(UserDetailsService userDao) {
-        notNull(userDao);
-        this.userDao = userDao;
-        return this;
+    @Bean
+    public UserDetailsService userDao() {
+        return new UserDao<>(userRepository);
     }
 }

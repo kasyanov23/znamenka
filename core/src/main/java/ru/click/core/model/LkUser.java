@@ -13,7 +13,8 @@ import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(schema = "clients", name = "users")
-@Getter @Setter
+@Getter
+@Setter
 public class LkUser implements UserDetails {
 
     @Id
@@ -38,6 +39,13 @@ public class LkUser implements UserDetails {
 
     @Column(name = "name")
     private String name;
+
+    @PostLoad
+    private void setNameUser() {
+        if (getName() == null) {
+            this.setName(getClient().getName());
+        }
+    }
 
 
     @Override

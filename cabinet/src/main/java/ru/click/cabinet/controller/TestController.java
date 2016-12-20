@@ -1,17 +1,14 @@
 package ru.click.cabinet.controller;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-
-@RestController
+@Controller
 public class TestController {
 
-    @GetMapping("/me")
-    public ResponseEntity me(Principal principal) {
-        return ResponseEntity.ok(principal);
+    @GetMapping("/user")
+    public String s() {
+        return "step2";
     }
 
 }
