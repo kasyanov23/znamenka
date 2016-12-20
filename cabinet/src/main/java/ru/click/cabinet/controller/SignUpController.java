@@ -29,14 +29,14 @@ import static org.springframework.util.Assert.notNull;
 @Controller
 @RequestMapping("/sign-up")
 @Slf4j
-public class UserController {
+public class SignUpController {
 
     private final SignUpService service;
 
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(SignUpService service, AuthenticationManager authenticationManager) {
+    public SignUpController(SignUpService service, AuthenticationManager authenticationManager) {
         notNull(service);
         this.service = service;
         this.authenticationManager = authenticationManager;
