@@ -3,6 +3,7 @@ package ru.click.cabinet.service;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,7 @@ import ru.click.core.repository.domain.ClientRepository;
 import ru.click.core.repository.domain.LkUserRepository;
 import ru.click.core.service.SmsWrapperService;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -65,10 +63,18 @@ public class SignUpService {
         return client;
     }
 
-    public void verify(String phone,
+    public void sendSmsAgain(
+            @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
+            @NotEmpty(message = "{unknown.sign.up.error}") String phone
+    ) {
+        Integer code = ThreadLocalRandom.current().nextInt(1000, 9999);
+        SignUpHolder.putCode(phone, code);
+        smsService.send(phone, String.valueOf(code));
+    }
+
+    public void verify(@Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}") String phone,
                        @Min(value = 1000, message = "{code.length}")
-                       @Max(value = 9999, message = "{code.length}")
-                               Integer code
+                       @Max(value = 9999, message = "{code.length}") Integer code
     ) {
         if (!checkCode(phone, code)) {
             throw new WrongCodeSignUpException();

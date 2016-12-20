@@ -116,6 +116,7 @@ $(document).ready(function () {
                 $(wizard).find('.btn-back').show();
                 // $(wizard).find('.btn-next').show();
                 $(wizard).find('.btn-phone-ver').hide();
+                $(wizard).find('.btn-repeat-code').hide();
                 $(wizard).find('.btn-finish').hide();
             }
         }
@@ -155,7 +156,7 @@ function verifySms() {
                 status = false;
             }
         },
-        async : false
+        async: false
     });
     return status;
 }
@@ -180,7 +181,16 @@ function verifyPhone() {
                 status = false;
             }
         },
-        async : false
+        async: false
     });
     return status;
+}
+
+function repeatCode() {
+    //Добавить валидацию телефона (проверить, что он есть в базе, можно возвращать имя, чтобы приветствовать пользователя)
+    var $phone = $("#phone").val();
+    $.ajax({
+        type: "post",
+        url: "/sign-up/sendAgain"
+    });
 }

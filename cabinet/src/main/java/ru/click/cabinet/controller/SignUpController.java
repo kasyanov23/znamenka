@@ -59,6 +59,13 @@ public class SignUpController {
         return ok(client.getName());
     }
 
+    @PostMapping("/sendAgain")
+    public ResponseEntity sendCodeAgain(HttpSession session) {
+        String phone = (String) session.getAttribute("phone");
+        service.sendSmsAgain(phone);
+        return ok().build();
+    }
+
 
     @PostMapping("/verify")
     public ResponseEntity verify(@RequestParam Integer code, HttpSession session) {
