@@ -1,6 +1,7 @@
 package ru.click.cabinet.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 import ru.click.cabinet.exception.NoExistsClientSignUpException;
 import ru.click.cabinet.exception.SignUpException;
 import ru.click.cabinet.service.SignUpService;
@@ -18,11 +20,14 @@ import ru.click.core.model.Client;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.util.Assert.notNull;
 
@@ -63,11 +68,17 @@ public class SignUpController {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity confirm(@RequestParam("p") String encodedPassword, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity confirm(
+            @RequestParam("p") String encodedPassword,
+            @RequestParam("c") String encodedConfirmPassword,
+            HttpSession session,
+            HttpServletRequest request
+    ) {
+
         String phone = (String) session.getAttribute("phone");
         byte[] decodedBytes = Base64Utils.decodeFromString(encodedPassword);
         String password = new String(decodedBytes, UTF_8);
-        service.confirm(phone, password);
+        service.confirm(phone, password, encodedPassword.equals(encodedConfirmPassword));
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(phone, password);
         token.setDetails(new WebAuthenticationDetails(request));
@@ -85,9 +96,9 @@ public class SignUpController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(BAD_REQUEST)
-    public void validationErrorHandle(ConstraintViolationException e) {
-        log.error(e.getMessage(), e);
+    public ResponseEntity<String> validationErrorHandle(ConstraintViolationException e) {
+        val messages = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
+        return badRequest().body(StringUtils.join(messages, ','));
     }
 
     @ExceptionHandler(NoExistsClientSignUpException.class)

@@ -132,8 +132,8 @@ function onFinishWizard() {
                 window.location.href = '/user';
                 //swal("Отлично!", "Теперь у вас есть учётная запись в личном кабинете", "success");
             },
-            400: function () {
-
+            400: function (response) {
+                swal(":(", response.responseText, "error");
             }
         }
     });
@@ -154,12 +154,9 @@ function verifySms() {
                 swal(":(", "Мы отправляли Вам другую смс", "error");
                 status = false;
             }
-        }
+        },
+        async : false
     });
-    // todo а стоит ли делать бесконечный цикл, который ждет пока выполнится каллбэк?
-    while (typeof status !== 'undefined') {
-        console.log('wait');
-    }
     return status;
 }
 
@@ -178,15 +175,12 @@ function verifyPhone() {
                 swal(":(", "У нас не зарегистрировано такого телефона, пожалуйста, проверьте корректность ввода", "error");
                 status = false;
             },
-            400 : function () {
-                swal(":(", "Неправильный формат телефона, пожалуйста, проверьте корректность ввода", "error");
+            400: function (response) {
+                swal(":(", response.responseText, "error");
                 status = false;
             }
-        }
+        },
+        async : false
     });
-    // todo а стоит ли делать бесконечный цикл, который ждет пока выполнится каллбэк?
-    while (typeof status !== 'undefined') {
-        console.log('wait');
-    }
     return status;
 }

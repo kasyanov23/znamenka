@@ -18,6 +18,7 @@ import ru.click.core.repository.domain.ClientRepository;
 import ru.click.core.repository.domain.LkUserRepository;
 import ru.click.core.service.SmsWrapperService;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -49,7 +50,10 @@ public class SignUpService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Client sendSms(@Pattern(regexp = "^9[0-9]{9}$") String phone) {
+    public Client sendSms(
+            @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
+                    String phone
+    ) {
         Client client = clientRepository.findOne(QClient.client.phone.eq("7".concat(phone)));
         if (client == null) {
             throw new NoExistsClientSignUpException();
@@ -61,7 +65,11 @@ public class SignUpService {
         return client;
     }
 
-    public void verify(String phone, @Min(1000) @Max(9999) Integer code) {
+    public void verify(String phone,
+                       @Min(value = 1000, message = "{code.length}")
+                       @Max(value = 9999, message = "{code.length}")
+                               Integer code
+    ) {
         if (!checkCode(phone, code)) {
             throw new WrongCodeSignUpException();
         }
@@ -69,8 +77,9 @@ public class SignUpService {
 
     public void confirm(
             String phone,
-            @Length(min = 6, max = 16)
-            @Pattern(regexp = "^[A-z]+[0-9A-z]+$") String password
+            @Length(min = 6, max = 16, message = "{password.length}")
+            @Pattern(regexp = "^[A-z]+[0-9A-z]+$", message = "{password.pattern}") String password,
+            @AssertTrue(message = "{password.not.equals}") boolean passwordEquals
     ) {
         Client client = SignUpHolder.getClient(phone).orElseThrow(UnknownSignUpException::new);
         val user = new LkUser();
@@ -85,7 +94,6 @@ public class SignUpService {
             throw new DataAccessSignUpException();
         }
     }
-
 
     private boolean checkCode(String phone, int code) {
         val earlyCode = SignUpHolder.getCode(phone);
