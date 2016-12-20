@@ -28,6 +28,13 @@
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>eu.michael-simons</groupId>
+            <artifactId>wro4j-spring-boot-starter</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
