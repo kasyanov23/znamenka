@@ -12,37 +12,42 @@ $(document).ready(function () {
         $('.card').removeClass('card-hidden');
     }, 700);
 
+    //todo Серега, поменяй сообщение.
+    $.validator.addMethod("regx", function(value, element, regexpr) {
+        return regexpr.test(value);
+    }, "Неформат");
+
     var $validator = $("#wizardForm").validate({
         rules: {
-            email: {
-                required: true,
-                email: true,
-                minlength: 5
-            },
-            first_name: {
-                required: false,
-                minlength: 5
-            },
-            last_name: {
-                required: false,
-                minlength: 5
-            },
-            website: {
-                required: true,
-                minlength: 5,
-                url: true
-            },
-            framework: {
-                required: false,
-                minlength: 4
-            },
-            cities: {
-                required: true
-
-            },
             phone: {
+                required : true,
                 number: true,
-                minlength: 4
+                regx: /^9[0-9]{9}$/
+            },
+            code : {
+                required : true,
+                number : true,
+                minlength: 4,
+                maxlength: 4,
+                min : 1000,
+                max : 9999
+            },
+            password : {
+                required : true,
+                regx : /^[A-z]+[0-9A-z]+$/,
+                minlength: 6,
+                maxlength: 16
+            },
+            confirmPassword : {
+                required: true,
+                equalTo: "#password"
+            }
+        },
+        messages : {
+            phone : {
+                required : 'Поле обязательно для заполнения',
+                number: 'Поле должно содержать только цифры',
+                regx: 'Поле должно содержать 10 цифр от 0 до 10'
             }
         }
     });
@@ -104,11 +109,12 @@ $(document).ready(function () {
                 $(wizard).find('.btn-sms-ver').hide();
                 $(wizard).find('.btn-tel-ver').hide();
                 $(wizard).find('.btn-back').hide();
+                $(wizard).find('.btn-repeat-code').hide();
                 $(wizard).find('.btn-finish').show();
             } else if ($current == 1) {
                 $(wizard).find('.btn-back').hide();
                 $(wizard).find('.btn-sms-ver').hide();
-
+                $(wizard).find('.btn-repeat-code').show();
                 $(wizard).find('.btn-phone-ver').show();
             } else {
 
@@ -124,10 +130,10 @@ $(document).ready(function () {
 });
 
 function onFinishWizard() {
-    var $password = $('#password').val(), $copyPassword = $('#copy-password').val();
+    var $password = $('#password').val(), $confirmPassword = $('#confirmPassword').val();
     $.ajax({
         type: "post",
-        url: "/sign-up/confirm?p=" + btoa($password) + "&c=" + btoa($copyPassword),
+        url: "/sign-up/confirm?p=" + btoa($password) + "&c=" + btoa($confirmPassword),
         statusCode: {
             200: function () {
                 window.location.href = '/user';
@@ -142,7 +148,6 @@ function onFinishWizard() {
 }
 
 function verifySms() {
-    //Валидация смс todo
     var $code = $("#code").val(), status;
     $.ajax({
         type: "post",
