@@ -19,22 +19,51 @@ import ru.click.core.repository.domain.ClientRepository;
 import ru.click.core.repository.domain.LkUserRepository;
 import ru.click.core.service.SmsWrapperService;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Сервис для регистрации клиента в нашей системе
+ * <p>
+ * Создан 19.12.2016
+ * <p>
+ *
+ * @author Евгений Уткин (Eugene Utkin)
+ */
 @Service
 @Slf4j
 @Validated
 public class SignUpService {
-
+    /**
+     * Смс сервис
+     */
     private final SmsWrapperService smsService;
 
+    /**
+     * Репозиторий пользователей
+     */
     private final LkUserRepository userRepository;
-
+    /**
+     * Репозиторий клиентов
+     */
     private final ClientRepository clientRepository;
 
+    /**
+     * Шифровщик паролей
+     */
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Конструктор для внедрения зависимостей
+     *
+     * @param smsService       смс сервис
+     * @param userRepository   репозиторий пользователей
+     * @param clientRepository репозиторий клиентов
+     * @param passwordEncoder  шифровщик паролей
+     */
     @Autowired
     public SignUpService(
             SmsWrapperService smsService,
@@ -48,6 +77,13 @@ public class SignUpService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Проверяет наличие телефона в базе, если телефон присутствует,
+     * то отправляет ему смс с 4-х кодом. Иначе - бросает исключение.
+     *
+     * @param phone номер телефона клиента
+     * @return клиент
+     */
     public Client sendSms(
             @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
                     String phone
@@ -63,6 +99,11 @@ public class SignUpService {
         return client;
     }
 
+    /**
+     * Отправляет смс клиенту повторно
+     *
+     * @param phone номер телефона клиента
+     */
     public void sendSmsAgain(
             @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
             @NotEmpty(message = "{unknown.sign.up.error}") String phone
@@ -72,6 +113,12 @@ public class SignUpService {
         smsService.send(phone, String.valueOf(code));
     }
 
+    /**
+     * Проверяет, соотстветствует ли код из смс отправленному ранее коду
+     *
+     * @param phone номер телефона клиента
+     * @param code  код, который ввел клиент
+     */
     public void verify(@Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}") String phone,
                        @Min(value = 1000, message = "{code.length}")
                        @Max(value = 9999, message = "{code.length}") Integer code
@@ -81,6 +128,13 @@ public class SignUpService {
         }
     }
 
+    /**
+     * Подтверждает регистрацию и создает нового пользователя
+     *
+     * @param phone          номер телефона клиента
+     * @param password       пароль клиента
+     * @param passwordEquals флаг, показывающий, соответствует ли пароль и подтверждающий пароль друг другу
+     */
     public void confirm(
             String phone,
             @Length(min = 6, max = 16, message = "{password.length}")
@@ -101,6 +155,13 @@ public class SignUpService {
         }
     }
 
+    /**
+     * Метод для проверки кодов из смс на равенство
+     *
+     * @param phone номер телефона клиента
+     * @param code  код, введенный клиентом
+     * @return {@literal true}, если коды равны, иначе - {@literal false}
+     */
     private boolean checkCode(String phone, int code) {
         val earlyCode = SignUpHolder.getCode(phone);
         return earlyCode.orElseThrow(UnknownSignUpException::new).equals(code);
