@@ -1,7 +1,7 @@
 package ru.click.cabinet.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.click.cabinet.repository.model.ClientTraining;
 import ru.click.cabinet.repository.query.QueriesLoader;
@@ -22,17 +22,19 @@ import java.util.List;
 @Repository
 public class TrainingManagerImpl implements TrainingManager {
 
-    private final JdbcOperations operations;
+    private final NamedParameterJdbcOperations operations;
 
     @Autowired
-    public TrainingManagerImpl(JdbcOperations operations) {
+    public TrainingManagerImpl(NamedParameterJdbcOperations operations) {
         this.operations = operations;
     }
 
 
     @Override
     public List<ClientTraining> last30Trainings(Long clientId) {
-        return operations.query(QueriesLoader.clientTrainings, Mappers.clientTraining, clientId);
+        return operations
+                .getJdbcOperations()
+                .query(QueriesLoader.clientTrainings, Mappers.clientTraining, clientId);
     }
 
 
