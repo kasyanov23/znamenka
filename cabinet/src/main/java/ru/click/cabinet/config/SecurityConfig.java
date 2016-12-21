@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sign-up/**", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").defaultSuccessUrl("/user", true)
+                .formLogin().loginPage("/login").defaultSuccessUrl("/training", true)
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
         ;

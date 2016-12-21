@@ -3,8 +3,8 @@ package ru.click.cabinet.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.click.cabinet.repository.model.ClientTraining;
 import ru.click.cabinet.repository.query.QueriesLoader;
-import ru.click.core.model.Training;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -22,15 +22,19 @@ import java.util.List;
 @Repository
 public class TrainingManagerImpl implements TrainingManager {
 
+    private final JdbcOperations operations;
+
     @Autowired
-    private JdbcOperations operations;
+    public TrainingManagerImpl(JdbcOperations operations) {
+        this.operations = operations;
+    }
+
 
     @Override
-    public List<Training> trainingsByPeriod(Date startDate, Date endDate, Long clientId) {
-        String sql = QueriesLoader.trainings;
-
-        return operations.query(sql, Mappers.training, toTimestamp(startDate), toTimestamp(endDate), clientId);
+    public List<ClientTraining> last30Trainings(Long clientId) {
+        return operations.query(QueriesLoader.clientTrainings, Mappers.clientTraining, clientId);
     }
+
 
     private Timestamp toTimestamp(Date startDate) {
         LocalDateTime t = LocalDateTime.of(startDate.toLocalDate(), LocalTime.MAX);

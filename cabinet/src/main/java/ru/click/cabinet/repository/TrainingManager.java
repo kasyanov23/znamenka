@@ -1,8 +1,7 @@
 package ru.click.cabinet.repository;
 
-import ru.click.core.model.Training;
+import ru.click.cabinet.repository.model.ClientTraining;
 
-import java.sql.Date;
 import java.util.List;
 
 /**
@@ -14,5 +13,5 @@ import java.util.List;
  */
 public interface TrainingManager {
 
-    List<Training> trainingsByPeriod(Date startDate, Date endDate, Long clientId);
+    List<ClientTraining> last30Trainings(Long clientId);
 }

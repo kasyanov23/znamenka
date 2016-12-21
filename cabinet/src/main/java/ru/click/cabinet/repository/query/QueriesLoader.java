@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.joining;
  */
 public class QueriesLoader {
 
-    public final static String trainings = queryLoader("sql/trainings.sql");
+    public final static String clientTrainings = queryLoader("sql/last_30_client_trainings.sql");
 
     private static String queryLoader(String path) {
         Resource res = new ClassPathResource(path);

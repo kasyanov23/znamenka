@@ -136,7 +136,7 @@ function onFinishWizard() {
         url: "/sign-up/confirm?p=" + btoa($password) + "&c=" + btoa($confirmPassword),
         statusCode: {
             200: function () {
-                window.location.href = '/user';
+                window.location.href = '/training';
                 //swal("Отлично!", "Теперь у вас есть учётная запись в личном кабинете", "success");
             },
             400: function (response) {
