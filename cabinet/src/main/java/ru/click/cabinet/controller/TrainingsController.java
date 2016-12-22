@@ -31,6 +31,7 @@ public class TrainingsController {
         List<ClientTraining> last30Trainings = trainingManager.getLast60Trainings(client.getId());
         Optional<Integer> countTrainings = trainingManager.getBalanceOfTraining(client.getId());
         mv.addObject("trainings", last30Trainings);
+        mv.addObject("clientName", client.getFullName());
         mv.addObject("count", countTrainings.orElse(0));
         return mv;
     }
