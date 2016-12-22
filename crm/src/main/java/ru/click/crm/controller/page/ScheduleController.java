@@ -8,13 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.click.core.model.CalendarEvent;
 import ru.click.crm.represent.domain.ClientApi;
 import ru.click.crm.represent.domain.TrainerApi;
 import ru.click.crm.represent.domain.TrainingApi;
 import ru.click.crm.service.subsystem.client.IClientFacadeService;
-import ru.click.crm.service.subsystem.training.ITrainingService;
 import ru.click.crm.service.subsystem.training.EventService;
-import ru.click.core.model.CalendarEvent;
+import ru.click.crm.service.subsystem.training.ITrainingService;
 
 import javax.validation.Valid;
 import java.sql.Date;
@@ -99,6 +99,7 @@ public class ScheduleController {
         }
         return badRequest().body(training);
     }
+
 
     @PostMapping(path = "new-client")
     public ResponseEntity<TrainingApi> bookTraining(

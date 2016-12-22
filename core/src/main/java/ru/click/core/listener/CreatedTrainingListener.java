@@ -1,6 +1,7 @@
 package ru.click.core.listener;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import ru.click.core.model.CalendarEvent;
@@ -20,27 +21,32 @@ import static java.time.temporal.ChronoUnit.MINUTES;
  *
  * @author Евгений Уткин (Eugene Utkin)
  */
+@Slf4j
 public class CreatedTrainingListener {
 
     private SimpMessageSendingOperations mesTemplate;
-    
+
     private SmsWrapperService smsService;
 
     @PostPersist
     private void postToCalendar(Training training) {
-        AutowireHelper.autowire(this, this.mesTemplate);
-        AutowireHelper.autowire(this, this.smsService);
-        LocalDateTime start = training.getStart();
-        LocalDateTime end = start.plus(30L, MINUTES);
-        CalendarEvent busyEvent = CalendarEvent
-                .createEvent()
-                .id(training.getId())
-                .title("Занято")
-                .start(start)
-                .end(end);
-        mesTemplate.convertAndSend("/calendar/event", busyEvent);
-        // TODO: 16.12.2016 поменять текст сообщения 
-        smsService.send(training.getClient().getPhone(), "Вы записаны на тренировку");
+        try {
+            AutowireHelper.autowire(this, this.mesTemplate);
+            AutowireHelper.autowire(this, this.smsService);
+            LocalDateTime start = training.getStart();
+            LocalDateTime end = start.plus(30L, MINUTES);
+            CalendarEvent busyEvent = CalendarEvent
+                    .createEvent()
+                    .id(training.getId())
+                    .title("Занято")
+                    .start(start)
+                    .end(end);
+            mesTemplate.convertAndSend("/calendar/event", busyEvent);
+            // TODO: 16.12.2016 поменять текст сообщения
+            smsService.send(training.getClient().getPhone(), "Вы записаны на тренировку");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
 
     }
 

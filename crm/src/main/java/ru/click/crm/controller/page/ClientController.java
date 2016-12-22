@@ -9,20 +9,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
 import ru.click.crm.annotation.ActionLogged;
+import ru.click.crm.represent.domain.ClientApi;
 import ru.click.crm.represent.domain.TrainingApi;
 import ru.click.crm.represent.page.client.ClientPurchaseApi;
 import ru.click.crm.represent.page.schedule.SubscriptionApi;
 import ru.click.crm.service.subsystem.client.IClientFacadeService;
-import ru.click.crm.represent.domain.ClientApi;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.*;
 import static org.springframework.util.Assert.notNull;
 
@@ -183,7 +182,11 @@ public class ClientController {
         if (clientId == null) {
             return badRequest().body(emptyList());
         }
-        List<SubscriptionApi> subscriptions = clientService.abonements(clientId);
+        List<SubscriptionApi> subscriptions = clientService
+                .abonements(clientId)
+                .stream()
+                .filter(ss -> clientService.existsFreeTrainings(clientId, ss.getPurchaseId()))
+                .collect(toList());
         return ok(subscriptions);
     }
 

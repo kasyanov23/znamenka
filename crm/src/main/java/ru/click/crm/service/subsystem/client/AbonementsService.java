@@ -21,4 +21,13 @@ public interface AbonementsService {
      * @return список абонементов
      */
     List<SubscriptionApi> abonements(Long clientId);
+
+    /**
+     * Проверяет, есть ли у клиента свободные тренировки (купленные, но без какого либо статуса)
+     *
+     * @param clientId   уникальный идентификатор клиента
+     * @param purchaseId уникальный идентификатор покупки абонемента
+     * @return {@literal true} если такие тренировки есть
+     */
+    boolean existsFreeTrainings(Long clientId, Long purchaseId);
 }

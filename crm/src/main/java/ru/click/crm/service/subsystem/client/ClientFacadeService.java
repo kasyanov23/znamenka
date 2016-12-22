@@ -105,6 +105,11 @@ public class ClientFacadeService implements IClientFacadeService {
         return service.findOne(ClientApi.class, client.phone.eq(phone));
     }
 
+    @Override
+    public boolean existsFreeTrainings(Long clientId, Long purchaseId) {
+        return abonementsService.existsFreeTrainings(clientId, purchaseId);
+    }
+
     /**
      * {@inheritDoc}
      */

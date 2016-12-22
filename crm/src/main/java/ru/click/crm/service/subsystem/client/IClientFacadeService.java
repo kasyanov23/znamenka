@@ -1,10 +1,10 @@
 package ru.click.crm.service.subsystem.client;
 
 
-import ru.click.crm.represent.domain.TrainingApi;
-import ru.click.crm.represent.domain.ClientApi;
-import ru.click.crm.represent.page.client.ClientPurchaseApi;
 import ru.click.core.represent.ApiStore;
+import ru.click.crm.represent.domain.ClientApi;
+import ru.click.crm.represent.domain.TrainingApi;
+import ru.click.crm.represent.page.client.ClientPurchaseApi;
 
 import java.util.List;
 
@@ -62,7 +62,4 @@ public interface IClientFacadeService extends AbonementsService, ClientsQuerySer
      * @return клиент
      */
     ClientApi clientByPhone(String phone);
-
-
-
 }
