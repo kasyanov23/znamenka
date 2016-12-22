@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.click.cabinet.repository.model.ClientTraining;
-import ru.click.cabinet.repository.query.QueriesLoader;
+import ru.click.cabinet.repository.query.QueriesHolder;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -16,6 +16,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonMap;
 
 /**
+ * Реализация менеджера тренировок
  * <p>
  * Создан 14.11.2016
  * <p>
@@ -25,25 +26,38 @@ import static java.util.Collections.singletonMap;
 @Repository
 public class TrainingManagerImpl implements TrainingManager {
 
+    /**
+     * Исполнитель запросов, позволяющий использовать именнованные параметры
+     */
     private final NamedParameterJdbcOperations operations;
 
+    /**
+     * Конструктор для внедрения зависимостей
+     * @param operations исполнитель запросов
+     */
     @Autowired
     public TrainingManagerImpl(NamedParameterJdbcOperations operations) {
         this.operations = operations;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ClientTraining> getLast60Trainings(Long clientId) {
         return operations
                 .getJdbcOperations()
-                .query(QueriesLoader.clientTrainings, Mappers.clientTraining, clientId);
+                .query(QueriesHolder.clientTrainings, Mappers.clientTraining, clientId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Integer> getBalanceOfTraining(Long clientId) {
         return operations.queryForObject(
-                QueriesLoader.balanceOfTraining,
+                QueriesHolder.balanceOfTraining,
                 singletonMap("clientId", clientId),
                 Mappers.balanceOfTraining
         );

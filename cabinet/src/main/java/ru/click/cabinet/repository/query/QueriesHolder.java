@@ -11,15 +11,17 @@ import java.io.UncheckedIOException;
 import static java.util.stream.Collectors.joining;
 
 /**
+ * Абстрактный класс, который подгружает из файлов
+ * и держит в памяти sql запросы
  * <p>
  * Создан 14.11.2016
  * <p>
  *
  * @author Евгений Уткин (Eugene Utkin)
  */
-public class QueriesLoader {
+public abstract class QueriesHolder {
 
-    public final static String clientTrainings = queryLoader("sql/last_30_client_trainings.sql");
+    public final static String clientTrainings = queryLoader("sql/last_60_client_trainings.sql");
 
     public final static String balanceOfTraining = queryLoader("sql/training-count.sql");
 

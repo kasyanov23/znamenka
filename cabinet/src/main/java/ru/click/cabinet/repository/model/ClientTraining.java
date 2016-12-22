@@ -16,14 +16,29 @@ import java.time.LocalDateTime;
 @Getter
 public class ClientTraining {
 
+    /**
+     * Студия, в которой была проведена тренировка
+     */
     private final Studio studio;
 
+    /**
+     * Начало тренировки
+     */
     private final LocalDateTime start;
 
+    /**
+     * Имя тренера
+     */
     private final String trainerName;
 
+    /**
+     * Статус тренера
+     */
     private final String trainingStatus;
 
+    /**
+     * Название абонемента, по которому была проведена тренировка
+     */
     private final String productName;
 
     private ClientTraining(
@@ -40,10 +55,17 @@ public class ClientTraining {
         this.productName = productName;
     }
 
+    /**
+     * Метод для создания билдера
+     * @return экземпляр билдера
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Билдер
+     */
     public static class Builder {
         private Studio studio;
         private LocalDateTime start;
