@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.singletonMap;
 
 /**
  * <p>
@@ -31,10 +34,19 @@ public class TrainingManagerImpl implements TrainingManager {
 
 
     @Override
-    public List<ClientTraining> last30Trainings(Long clientId) {
+    public List<ClientTraining> getLast60Trainings(Long clientId) {
         return operations
                 .getJdbcOperations()
                 .query(QueriesLoader.clientTrainings, Mappers.clientTraining, clientId);
+    }
+
+    @Override
+    public Optional<Integer> getBalanceOfTraining(Long clientId) {
+        return operations.queryForObject(
+                QueriesLoader.balanceOfTraining,
+                singletonMap("clientId", clientId),
+                Mappers.balanceOfTraining
+        );
     }
 
 

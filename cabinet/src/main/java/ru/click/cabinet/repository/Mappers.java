@@ -4,6 +4,11 @@ import org.springframework.jdbc.core.RowMapper;
 import ru.click.cabinet.repository.model.ClientTraining;
 import ru.click.core.model.Training;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 public class Mappers {
 
     final static RowMapper<Training> training = (rs, i) -> new Training()
@@ -15,7 +20,7 @@ public class Mappers {
             .setComment(rs.getString("comment"))
             .setPassForAuto(rs.getBoolean("pass_for_auto"));
 
-    final static RowMapper<ClientTraining> clientTraining = (rs,i) -> ClientTraining
+    final static RowMapper<ClientTraining> clientTraining = (rs, i) -> ClientTraining
             .builder()
             .studio(rs.getInt(1))
             .start(rs.getTimestamp(2))
@@ -23,4 +28,11 @@ public class Mappers {
             .trainingStatus(rs.getString(4))
             .productName(rs.getString(5))
             .build();
+
+    final static RowMapper<Optional<Integer>> balanceOfTraining = (rs, i) -> {
+        if (rs.wasNull()) {
+            return empty();
+        }
+        return of(rs.getInt(1));
+    };
 }

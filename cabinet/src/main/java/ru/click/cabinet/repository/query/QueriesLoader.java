@@ -21,6 +21,8 @@ public class QueriesLoader {
 
     public final static String clientTrainings = queryLoader("sql/last_30_client_trainings.sql");
 
+    public final static String balanceOfTraining = queryLoader("sql/training-count.sql");
+
     private static String queryLoader(String path) {
         Resource res = new ClassPathResource(path);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(res.getInputStream()))) {

@@ -3,6 +3,7 @@ package ru.click.cabinet.repository;
 import ru.click.cabinet.repository.model.ClientTraining;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -13,5 +14,7 @@ import java.util.List;
  */
 public interface TrainingManager {
 
-    List<ClientTraining> last30Trainings(Long clientId);
+    List<ClientTraining> getLast60Trainings(Long clientId);
+
+    Optional<Integer> getBalanceOfTraining(Long clientId);
 }

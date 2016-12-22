@@ -13,6 +13,6 @@ WITH paid AS (
 )
 SELECT
   c.client_id,
-  coalesce(paid.number, 0) - coalesce(conducted.count, 0) AS "count"
+  paid.number - coalesce(conducted.count, 0) AS "count"
 FROM common.clients c, paid, conducted
 WHERE c.client_id = :clientId

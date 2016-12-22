@@ -13,6 +13,7 @@ import ru.click.core.model.Client;
 import ru.click.core.model.LkUser;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TrainingsController {
@@ -27,8 +28,10 @@ public class TrainingsController {
     @GetMapping("/training")
     public ModelAndView view(@ModelAttribute Client client) {
         val mv = new ModelAndView("trainings");
-        List<ClientTraining> last30Trainings = trainingManager.last30Trainings(client.getId());
+        List<ClientTraining> last30Trainings = trainingManager.getLast60Trainings(client.getId());
+        Optional<Integer> countTrainings = trainingManager.getBalanceOfTraining(client.getId());
         mv.addObject("trainings", last30Trainings);
+        mv.addObject("count", countTrainings.orElse(0));
         return mv;
     }
 

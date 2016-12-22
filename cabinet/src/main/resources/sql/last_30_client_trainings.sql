@@ -11,4 +11,4 @@ FROM znamenka.trainings t
   INNER JOIN common.products pr ON p.product_id = pr.product_id
 WHERE t.client_id = ?
 ORDER BY t.start DESC
-LIMIT 30
+LIMIT 60
