@@ -17,11 +17,11 @@ import ru.click.core.model.User;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * <p>
- *     Глобальный обработчик ошибок.
- *     Служит для маппинга ошибок и отдаче их клиенту в стандартизированном виде
+ * Глобальный обработчик ошибок.
+ * Служит для маппинга ошибок и отдаче их клиенту в стандартизированном виде
  * <p>
  * Создан 10.06.2016
+ *
  * @author Евгений Уткин (Eugene Utkin)
  */
 @ControllerAdvice
@@ -41,8 +41,9 @@ class GlobalDefaultExceptionHandler {
 
     /**
      * Обработчик ошибок
+     *
      * @param req запрос
-     * @param e обрабатываемая ошибка
+     * @param e   обрабатываемая ошибка
      * @return представление ошибки для клиента
      * @throws Exception
      */

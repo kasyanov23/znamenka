@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import ru.click.cabinet.exception.DataAccessSignUpException;
-import ru.click.cabinet.exception.NoExistsClientSignUpException;
-import ru.click.cabinet.exception.UnknownSignUpException;
-import ru.click.cabinet.exception.WrongCodeSignUpException;
+import ru.click.cabinet.exception.signup.DataAccessSignUpException;
+import ru.click.cabinet.exception.signup.NoExistsClientSignUpException;
+import ru.click.cabinet.exception.signup.UnknownSignUpException;
+import ru.click.cabinet.exception.signup.WrongCodeSignUpException;
 import ru.click.core.model.Client;
 import ru.click.core.model.LkUser;
 import ru.click.core.model.QClient;
@@ -36,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 @Slf4j
 @Validated
-public class SignUpService {
+public class SignUpService implements ISignUpService {
     /**
      * Смс сервис
      */
@@ -84,6 +84,7 @@ public class SignUpService {
      * @param phone номер телефона клиента
      * @return клиент
      */
+    @Override
     public Client sendSms(
             @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
                     String phone
@@ -104,6 +105,7 @@ public class SignUpService {
      *
      * @param phone номер телефона клиента
      */
+    @Override
     public void sendSmsAgain(
             @Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}")
             @NotEmpty(message = "{unknown.sign.up.error}") String phone
@@ -119,6 +121,7 @@ public class SignUpService {
      * @param phone номер телефона клиента
      * @param code  код, который ввел клиент
      */
+    @Override
     public void verify(@Pattern(regexp = "^9[0-9]{9}$", message = "{phone.pattern}") String phone,
                        @Min(value = 1000, message = "{code.length}")
                        @Max(value = 9999, message = "{code.length}") Integer code
@@ -135,6 +138,7 @@ public class SignUpService {
      * @param password       пароль клиента
      * @param passwordEquals флаг, показывающий, соответствует ли пароль и подтверждающий пароль друг другу
      */
+    @Override
     public void confirm(
             String phone,
             @Length(min = 6, max = 16, message = "{password.length}")

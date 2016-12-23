@@ -2,7 +2,6 @@ package ru.click.cabinet.controller;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,11 +9,18 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.click.cabinet.repository.TrainingManager;
 import ru.click.cabinet.repository.model.ClientTraining;
 import ru.click.core.model.Client;
-import ru.click.core.model.LkUser;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Контроллер для отправки сообщений персоналу студии
+ * <p>
+ * Создан 23.12.2016
+ * <p>
+ *
+ * @author Евгений Уткин (Eugene Utkin)
+ */
 @Controller
 public class TrainingsController {
 
@@ -36,10 +42,5 @@ public class TrainingsController {
         return mv;
     }
 
-    @ModelAttribute
-    public Client extractClient(Authentication auth) {
-        LkUser user = (LkUser) auth.getPrincipal();
-        return user.getClient();
-    }
 
 }

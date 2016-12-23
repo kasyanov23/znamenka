@@ -79,15 +79,17 @@ CREATE TABLE common.clients_history (
 
 CREATE TABLE common.duty_plan_type
 (
-  duty_plan_type_id BIGINT NOT NULL PRIMARY KEY,
+  duty_plan_type_id BIGINT      NOT NULL PRIMARY KEY,
   duty_plan_name    VARCHAR(50) NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION common.upd_client()
   RETURNS TRIGGER AS '
 BEGIN
-  INSERT INTO common.clients_history(client_id, surname, phone, email, birth_date, name, comment, male, car_number, change_date)
-  VALUES (old.client_id, old.surname, old.phone, old.email, old.birth_date, old.name, old.comment, old.male, old.car_number, CURRENT_TIMESTAMP);
+  INSERT INTO common.clients_history (client_id, surname, phone, email, birth_date, name, comment, male, car_number, change_date)
+  VALUES
+    (old.client_id, old.surname, old.phone, old.email, old.birth_date, old.name, old.comment, old.male, old.car_number,
+     CURRENT_TIMESTAMP);
   RETURN new;
 END;'
 LANGUAGE plpgsql;
@@ -95,6 +97,29 @@ LANGUAGE plpgsql;
 CREATE TRIGGER tr_upd_client
 AFTER UPDATE OR DELETE ON common.clients
 FOR EACH ROW EXECUTE PROCEDURE common.upd_client();
+
+CREATE TABLE common.sms_logs (
+  id      BIGSERIAL PRIMARY KEY NOT NULL,
+  phone   CHAR(10)              NOT NULL,
+  text    TEXT                  NOT NULL,
+  status  TEXT                  NOT NULL,
+  created TIMESTAMP             NOT NULL DEFAULT current_timestamp
+);
+
+CREATE TABLE common.studio (
+  studio_id   SERIAL PRIMARY KEY NOT NULL,
+  studio_name VARCHAR(100)       NOT NULL,
+  studio_desc TEXT
+);
+
+CREATE TABLE common.messages_from_client (
+  message_id    BIGSERIAL PRIMARY KEY                         NOT NULL,
+  studio_id     INTEGER REFERENCES common.studio (studio_id)  NOT NULL,
+  dist_username VARCHAR(50)                                   NOT NULL,
+  client_id     INTEGER REFERENCES common.clients (client_id) NOT NULL,
+  message_text  TEXT                                          NOT NULL,
+  createdDate   TIMESTAMP                                     NOT NULL
+);
 
 END TRANSACTION;
 COMMIT;

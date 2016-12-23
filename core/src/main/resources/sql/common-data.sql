@@ -1,5 +1,7 @@
 BEGIN TRANSACTION;
 
+INSERT INTO common.studio VALUES (1, 'Znamenka', null);
+
 INSERT INTO common.abon_type (id, type) VALUES (1, 'ЭМС');
 INSERT INTO common.abon_type (id, type) VALUES (2, 'TRX');
 

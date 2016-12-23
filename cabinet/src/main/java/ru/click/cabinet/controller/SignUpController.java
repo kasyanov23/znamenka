@@ -13,9 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
-import ru.click.cabinet.exception.NoExistsClientSignUpException;
-import ru.click.cabinet.exception.SignUpException;
-import ru.click.cabinet.service.SignUpService;
+import ru.click.cabinet.exception.signup.NoExistsClientSignUpException;
+import ru.click.cabinet.exception.signup.SignUpException;
+import ru.click.cabinet.service.ISignUpService;
 import ru.click.core.model.Client;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ public class SignUpController {
     /**
      * Сервис для процесса регистрации
      */
-    private final SignUpService service;
+    private final ISignUpService service;
 
     /**
      * Менеджер аунтефикации, необходим для автологина
@@ -62,7 +62,7 @@ public class SignUpController {
      * @param authManager {@link this#authManager}
      */
     @Autowired
-    public SignUpController(SignUpService service, AuthenticationManager authManager) {
+    public SignUpController(ISignUpService service, AuthenticationManager authManager) {
         notNull(service);
         this.service = service;
         this.authManager = authManager;

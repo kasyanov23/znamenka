@@ -1,4 +1,4 @@
-package ru.click.cabinet.exception;
+package ru.click.cabinet.exception.signup;
 
 /**
  * Ошибка регистрации, возникающая во всяких непредвиденных ситуациях
