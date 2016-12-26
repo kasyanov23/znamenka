@@ -83,6 +83,14 @@ CREATE TABLE common.duty_plan_type
   duty_plan_name    VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE common.sms_logs (
+  id      BIGSERIAL PRIMARY KEY NOT NULL,
+  phone   CHAR(10)              NOT NULL,
+  text    TEXT                  NOT NULL,
+  status  TEXT                  NOT NULL,
+  created TIMESTAMP             NOT NULL DEFAULT current_timestamp
+);
+
 CREATE OR REPLACE FUNCTION common.upd_client()
   RETURNS TRIGGER AS '
 BEGIN
