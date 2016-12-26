@@ -98,32 +98,29 @@ $(document).ready(function () {
         },
         onTabShow: function (tab, navigation, index) {
             var $total = navigation.find('li').length;
-            var $current = index + 1;
 
             var wizard = navigation.closest('.card-wizard');
-
-            // If it's the last tab then hide the last button and show the finish instead
-            if ($current >= $total) {
+            if (index == 0) {
+                $(wizard).find('.btn-back').hide();
+                $(wizard).find('.btn-sms-ver').hide();
+                $(wizard).find('.btn-repeat-code').hide();
+                $(wizard).find('.btn-phone-ver').show();
+                return;
+            }
+            if (index == 1) {
+                $(wizard).find('.btn-finish').hide();
+                $(wizard).find('.btn-phone-ver').hide();
+                $(wizard).find('.btn-sms-ver').show();
+                $(wizard).find('.btn-back').show();
+                $(wizard).find('.btn-repeat-code').show();
+            }
+            if (index == 3) {
                 $(wizard).find('.btn-next').hide();
-
                 $(wizard).find('.btn-sms-ver').hide();
                 $(wizard).find('.btn-tel-ver').hide();
                 $(wizard).find('.btn-back').hide();
                 $(wizard).find('.btn-repeat-code').hide();
                 $(wizard).find('.btn-finish').show();
-            } else if ($current == 1) {
-                $(wizard).find('.btn-back').hide();
-                $(wizard).find('.btn-sms-ver').hide();
-                $(wizard).find('.btn-repeat-code').show();
-                $(wizard).find('.btn-phone-ver').show();
-            } else {
-
-                $(wizard).find('.btn-sms-ver').show();
-                $(wizard).find('.btn-back').show();
-                // $(wizard).find('.btn-next').show();
-                $(wizard).find('.btn-phone-ver').hide();
-                $(wizard).find('.btn-repeat-code').hide();
-                $(wizard).find('.btn-finish').hide();
             }
         }
     });
