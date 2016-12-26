@@ -13,3 +13,8 @@
  2. znamenka-schema
  3. common-data
  4. znamenka-data
+ 
+ ##### После этого сделать 
+ ```
+ mvn install
+ ```
